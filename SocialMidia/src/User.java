@@ -1,5 +1,4 @@
-import java.util.Scanner;
-import javax.swing.text.Style;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -29,7 +28,8 @@ public class User {
     String ContaDiferente;
     String NomeEmpresa, NomePessoal, SenhaPessoal, SenhaEmpresa;
 
-    public static HashMap<String, String> usersList = new HashMap<String, String>();
+    public static HashMap<String, String> userListE = new HashMap<String, String>();
+    public static HashMap<String, String> userListP = new HashMap<String, String>();
 
     public User() {
 
@@ -110,12 +110,12 @@ public class User {
 
             if (ContaDiferente.equalsIgnoreCase("EMPRESA")) {
                 CompanyUser userNewE = new CompanyUser(Nome, Email, Senha, ContaDiferente);
-                usersList.put(Nome, Senha);
+                userListE.put(Nome, Senha);
                 frame.dispose();
                 userNewE.HomeUser();
             } else if (ContaDiferente.equalsIgnoreCase("PESSOAL")) {
                 PersonUser userNewP = new PersonUser(Nome, Email, Senha, ContaDiferente);
-                usersList.put(Nome, Senha);
+                userListP.put(Nome, Senha);
                 frame.dispose();
                 userNewP.HomeUser();
             }
@@ -147,7 +147,6 @@ public class User {
         buttonPanel.add(new JButton("Aba Login"));
         buttonPanel.add(new JButton("Remover Amizades"));
         buttonPanel.add(new JButton("Atualizar dados"));
-
 
         frame.add(buttonPanel, BorderLayout.CENTER);
 
@@ -195,8 +194,9 @@ public class User {
         int choise = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja apagar este perfil", "Confirmação",
                 JOptionPane.YES_NO_OPTION);
         if (choise == JOptionPane.YES_OPTION) {
-            if (usersList.containsKey(nome)) {
-                usersList.remove(nome);
+            if (userListE.containsKey(nome) || userListP.containsKey(nome)) {
+                userListE.remove(nome);
+                userListP.remove(nome);
             }
             JOptionPane.showMessageDialog(null, "O usuário " + nome + " foi removido com sucesso");
         }
@@ -209,7 +209,10 @@ public class User {
         DefaultListModel<String> userListModel = new DefaultListModel<>();
         JList<String> userList = new JList<>(userListModel);
 
-        for (String name : usersList.keySet()) {
+        for (String name : userListE.keySet()) {
+            userListModel.addElement(name);
+        }
+        for (String name : userListP.keySet()) {
             userListModel.addElement(name);
         }
 
@@ -255,23 +258,23 @@ public class User {
     public void AuthUser() {
         boolean auth = false;
         do {
-            if (usersList.containsKey(Nome) && usersList.get(Nome).equals(Senha)) {
+            if (userListE.containsKey(Nome) && userListE.get(Nome).equals(Senha)) {
                 JOptionPane.showMessageDialog(null, "Login bem-sucedido!");
                 auth = true;
-                if ("EMPRESA".equals(ContaDiferente)) {
-                    CompanyUser userNewE = new CompanyUser(Nome, Senha, Email, ContaDiferente);
-                    userNewE.HomeUser();
-                } else if ("PESSOAL".equals(ContaDiferente)){
-                    PersonUser userNewP = new PersonUser(Nome, Senha, Email, ContaDiferente);
-                    userNewP.HomeUser();
-                }
+                CompanyUser user = new CompanyUser(Nome, Email, Senha, ContaDiferente);
+                user.HomeUser();
+            } else if (userListP.containsKey(Nome) && userListP.get(Nome).equals(Senha)) {
+                JOptionPane.showMessageDialog(null, "Login bem-sucedido!");
+                auth = true;
+                PersonUser user = new PersonUser(Nome, Email, Senha, ContaDiferente);
+                user.HomeUser();
             } else {
                 JOptionPane.showMessageDialog(null, "Dados inválidos!");
                 UserLogin();
                 return;
             }
         } while (!auth);
-        
+
     }
 
     public static HashMap<String, ArrayList<String>> friendList = new HashMap<>();
@@ -286,7 +289,13 @@ public class User {
         JButton addButton = new JButton("Adicionar Amigo");
         addButton.setBounds(150, 100, 100, 30);
 
-        for (String name : usersList.keySet()) {
+        for (String name : userListE.keySet()) {
+            if (!name.equals(Nome) && !areFriends(name)) {
+                userListComboBox.addItem(name);
+            }
+        }
+
+        for (String name : userListP.keySet()) {
             if (!name.equals(Nome) && !areFriends(name)) {
                 userListComboBox.addItem(name);
             }
@@ -301,7 +310,7 @@ public class User {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String friendName = (String) userListComboBox.getSelectedItem();
-                if (friendName != null && usersList.containsKey(friendName)) {
+                if (friendName != null && userListE.containsKey(friendName) || userListP.containsKey(friendName)) {
                     if (!friendList.containsKey(Nome)) {
                         friendList.put(Nome, new ArrayList<>());
                     }
@@ -428,16 +437,16 @@ public class User {
             public void actionPerformed(ActionEvent e) {
                 String novoNome = nameField.getText();
 
-                if (usersList.containsKey(nome)) {
+                if (userListE.containsKey(nome)) {
                     if (!novoNome.isEmpty()) {
                         setNome(novoNome);
                     }
 
-                    usersList.get(nome);
-                    usersList.get(Senha);
-                    usersList.remove(nome);
-                    usersList.remove(Senha);
-                    usersList.put(novoNome, Senha);
+                    userListE.get(nome);
+                    userListE.get(Senha);
+                    userListE.remove(nome);
+                    userListE.remove(Senha);
+                    userListE.put(novoNome, Senha);
 
                 }
 

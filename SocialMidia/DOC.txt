@@ -1,0 +1,12 @@
+Hoje dia 23/10/2023 finalizei a mudança da estrutura de dados de "Deque" para "HashMap" e Ordenei a entrada do 
+nome do usuário no metodo HomeUser, Alem disso, estruturei as mudanças de polimorfismo da classe PersonUser com suas
+devidas mudanças para conta pessoal, irei agora introduzir os metodos da lista de amigos entre os usuários.
+
+
+
+Hoje dia 25/10/2023 estou incluindo a interface grafica juntamente com a mudança das respectivos métodos da classe
+parei no método UserLogin.
+
+hoje dia 26/10/2023 continuei os afazeres anteriores e parei no método removeFriend
+
+hoje dia 27/10/2023 parei no método updateUser, fazer ele funcionar

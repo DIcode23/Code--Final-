@@ -14,7 +14,6 @@ public class MainApp {
 
         JPanel panel = new JPanel();
 
-    
         JButton createUserButton = new JButton("Criar Usuário");
         createUserButton.addActionListener(new ActionListener() {
             @Override
